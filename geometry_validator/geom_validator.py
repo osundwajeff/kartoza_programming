@@ -2,16 +2,18 @@
 """Geomtetry point validator function"""
 
 
-#initialize empty list
+# initialize empty list
 data = []
+
 
 def geom_validator(lat, lon):
     """validates if geometry is valid"""
 
     status = False
-    reason = """Latitude and Longitude must be within valid range, (Latitude[-90 to 90] and Longitude[-180 to 180])"""
+    reason = """Latitude and Longitude must be within valid range,
+(Latitude[-90 to 90] and Longitude[-180 to 180])"""
 
-    if (-90 <= lat <= 90) and (-180 <= lon <=180):
+    if (-90 <= lat <= 90) and (-180 <= lon <= 180):
         status = True
         reason = "Latitude and Longitude is within valid range"
 
@@ -24,9 +26,10 @@ def geom_validator(lat, lon):
 
     data.append([lat, lon, status, reason])
 
+
 def check_history():
     """returns history"""
-    
+
     if not data:
         print("""
             ---------------
@@ -38,9 +41,12 @@ def check_history():
         for y in data:
             print(y)
 
+
 def end_session():
     """to end the session"""
+
     pass
+
 
 active_session = True
 while active_session:
@@ -53,9 +59,9 @@ while active_session:
         3. End
         """)
     choice = int(input("Enter choice:"))
-    
+
     if choice == 1:
-        #input
+        # input
         print("""
             ------------------------------------
             Enter Latitude and Longitude values!

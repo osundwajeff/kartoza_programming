@@ -9,11 +9,11 @@ def geom_validator(lat, lon):
     """validates if geometry is valid"""
 
     status = False
-    reason = """Latitude and Longitude must be within valid range, (Latitude[-90 to 90] and Longitude[-180 to 180])."""
+    reason = """Latitude and Longitude must be within valid range, (Latitude[-90 to 90] and Longitude[-180 to 180])"""
 
     if (-90 <= lat <= 90) and (-180 <= lon <=180):
         status = True
-        reason = "Latitude and Longitude is within valid range."
+        reason = "Latitude and Longitude is within valid range"
 
     if status:
         print("Point is valid")
@@ -33,7 +33,10 @@ def check_history():
             No history yet!
             ---------------""")
     else:
-        print(data)
+        no_of_items = len(data)
+        print(f"Number of points: {no_of_items}")
+        for y in data:
+            print(y)
 
 def end_session():
     """to end the session"""

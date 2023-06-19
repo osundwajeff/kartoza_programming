@@ -74,97 +74,100 @@ def slow_print(t):
         time.sleep(random.random()*10.0/typing_speed)
     print('')
 
+def main():
+    active_session = True
 
-active_session = True
-
-while active_session:
-    print("""
-        ------------------
-        |      Menu      |
-        ------------------
-            1. Validate Point
-            2. Check History
-            3. Export History
-            4. Read History
-            5. End
-            """)
-    try:
-        choice = int(input("Enter choice:"))
-
-        if choice == 1:
-            # input
-            print("""
-                ------------------------------------
-                Enter Latitude and Longitude values!
-                ------------------------------------""")
-            while True:
-                try:
-                    lat = float(input("Enter Latitude: "))
-                    break
-                except ValueError:
-                    print("""
-                        Kindly enter number only!""")
-                continue
-
-            while True:
-                try:
-                    lon = float(input("Enter Longitude: "))
-                    break
-                except ValueError:
-                    print("""
-                        Kindly enter number only!""")
-                continue
-
-            validator = PointValidator(lat, lon)
-
-            slow_print("""
-                ---------
-                Execution!
-                ---------""")
-            validator.geom_validator(True, "Valid")
-
-        elif choice == 2:
-            slow_print("""
-                ------------------
-                Retrieving history!
-                ------------------""")
-            validator = PointValidator(lat=None, lon=None)
-            validator.check_history()
-
-        elif choice == 3:
-            slow_print("""
-                ------------------
-                Exporting History To File!
-                ------------------""")
-            validator = PointValidator(lat, lon)
-            now = time.localtime()
-            filename = (f"point-{now.tm_year}.{now.tm_mon:02d}.{now.tm_mday}-{now.tm_hour:02d}.{now.tm_min:02d}.{now.tm_sec:02d}")
-            validator.export_history(filename)
-            slow_print(f"""
-                Exported to File: {filename}""")
-
-        elif choice == 4:
-            slow_print("""
-                ------------------
-                Reading History From File!
-                ------------------""")
-            validator = PointValidator(lat=None, lon=None)
-            filename = input("Enter filename: ")
-            validator.read_history(filename)
-            slow_print(f"""
-            Read File: {filename}""")
-
-        elif choice == 5:
-            slow_print("""
-                ---------------
-                Ending session!
-                ---------------""")
-            break
-        else:
-            print("""
-                -----------------------
-                Command does not exist!
-                -----------------------""")
-    except ValueError:
+    while active_session:
         print("""
-            Error! Input number.""")
+            ------------------
+            |      Menu      |
+            ------------------
+                1. Validate Point
+                2. Check History
+                3. Export History
+                4. Read History
+                5. End
+                """)
+        try:
+            choice = int(input("Enter choice:"))
+
+            if choice == 1:
+                # input
+                print("""
+                    ------------------------------------
+                    Enter Latitude and Longitude values!
+                    ------------------------------------""")
+                while True:
+                    try:
+                        lat = float(input("Enter Latitude: "))
+                        break
+                    except ValueError:
+                        print("""
+                            Kindly enter number only!""")
+                    continue
+
+                while True:
+                    try:
+                        lon = float(input("Enter Longitude: "))
+                        break
+                    except ValueError:
+                        print("""
+                            Kindly enter number only!""")
+                    continue
+
+                validator = PointValidator(lat, lon)
+
+                slow_print("""
+                    ---------
+                    Execution!
+                    ---------""")
+                validator.geom_validator(True, "Valid")
+
+            elif choice == 2:
+                slow_print("""
+                    ------------------
+                    Retrieving history!
+                    ------------------""")
+                validator = PointValidator(lat=None, lon=None)
+                validator.check_history()
+
+            elif choice == 3:
+                slow_print("""
+                    ------------------
+                    Exporting History To File!
+                    ------------------""")
+                validator = PointValidator(lat, lon)
+                now = time.localtime()
+                filename = (f"point-{now.tm_year}.{now.tm_mon:02d}.{now.tm_mday}-{now.tm_hour:02d}.{now.tm_min:02d}.{now.tm_sec:02d}")
+                validator.export_history(filename)
+                slow_print(f"""
+                    Exported to File: {filename}""")
+
+            elif choice == 4:
+                slow_print("""
+                    ------------------
+                    Reading History From File!
+                    ------------------""")
+                validator = PointValidator(lat=None, lon=None)
+                filename = input("Enter filename: ")
+                validator.read_history(filename)
+                slow_print(f"""
+                Read File: {filename}""")
+
+            elif choice == 5:
+                slow_print("""
+                    ---------------
+                    Ending session!
+                    ---------------""")
+                break
+            else:
+                print("""
+                    -----------------------
+                    Command does not exist!
+                    -----------------------""")
+        except ValueError:
+            print("""
+                Error! Input number.""")
+
+if __name__ == "__main__":
+    main()

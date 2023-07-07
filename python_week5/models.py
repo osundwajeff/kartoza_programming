@@ -7,7 +7,7 @@ from typing import List
 from sqlalchemy import ForeignKey, String, Column, Integer, Float, DateTime
 from sqlalchemy.orm import DeclarativeBase, Mapped, relationship
 from geoalchemy2 import Geometry
-from sqlalchemy import UUID, Boolean, Date
+from sqlalchemy import Boolean, Date, UUID
 
 
 class Base(DeclarativeBase):
@@ -16,8 +16,8 @@ class Base(DeclarativeBase):
 
 class PointOfInterestTypeClass(Base):
     __tablename__ = "point_of_interest_type"
-    
-    id = Column(Integer, primary_key=True)
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(50), nullable=False)
     notes = Column(String(255))
     image = Column(String(255))
@@ -28,21 +28,14 @@ class PointOfInterestTypeClass(Base):
         unique=True,
         nullable=False,
         server_default=sqlalchemy.text("gen_random_uuid()"))
-    
-    def __init__(self, name,notes, image):
-        """initialize function"""
-        #self.id = id
-        self.name = name
-        self.notes = notes
-        self.image = image
-        self.created_at = datetime.now()
-        self.updated_at = datetime.now()
-    pass
+
+    point_of_interests = relationship(
+        "PointOfInterestClass", back_populates="point_of_interest_types")
 
 
 class PointOfInterestClass(Base):
     __tablename__ = "point_of_interest"
-    
+
     id = Column(Integer, primary_key=True, autoincrement=True)
     notes = Column(String(255))
     image = Column(String(255))
@@ -62,6 +55,10 @@ class PointOfInterestClass(Base):
         ForeignKey("point_of_interest_type.uuid"),
         nullable=False)
 
+    # one to many relationship
+    point_of_interest_types = relationship(
+        "PointOfInterestTypeClass", back_populates="point_of_interests")
+
     # many-to-many relationship to Condition,
     # bypassing the `PointOfInterestConditionsClass'
     condition_as: Mapped[List["Condition"]] = relationship(
@@ -71,28 +68,16 @@ class PointOfInterestClass(Base):
 
     # association between PointOfInterestClass -> PointOfInterestConditionClass
     # -> PointOfInterestClass
-    condition_association: Mapped[List["PointOfInterestConditionsClass"]] = relationship(
+    condition_association: Mapped[
+        List["PointOfInterestConditionsClass"]] = relationship(
         "PointOfInterestConditionsClass",
         back_populates="point_of_interest"
         )
 
-    """Points of interest class"""
-    def __init__(self, notes,
-                 height_m, image, geometry):
-        """initialize function"""
-        self.notes = notes
-        self.height_m = height_m
-        self.image = image
-        self.geometry = geometry
-        self.created_at = datetime.now()
-        self.updated_at = datetime.now()
-    pass
-
 
 class Condition(Base):
     __tablename__ = "condition"
-    
-    #TODO class instances
+
     id = Column(Integer, primary_key=True, autoincrement=True)
     notes = Column(String(255))
     image = Column(String(255))
@@ -113,25 +98,17 @@ class Condition(Base):
 
     # association between Condition -> PointOfInterestConditionClass
     # -> PointOfInterestClass
-    point_of_interest_association: Mapped[List["PointOfInterestConditionsClass"]] = relationship(
+    point_of_interest_association: Mapped[
+        List["PointOfInterestConditionsClass"]] = relationship(
         "PointOfInterestConditionsClass",
         back_populates="condition"
         )
 
-    def __init__(self,notes, image):
-        """initialize function"""
-        #self.id = id
-        self.notes = notes
-        self.image = image
-        self.created_at = datetime.now()
-        self.updated_at = datetime.now()
-    pass
-
 
 class PointOfInterestConditionsClass(Base):
     __tablename__ = "point_of_interest_conditions"
-    
-    date = Column(Date, primary_key=True)
+
+    date = Column(DateTime, default=datetime.now(), primary_key=True)
     notes = Column(String(255))
     image = Column(String(255))
     created_at = Column(DateTime, default=datetime.now())
@@ -142,9 +119,9 @@ class PointOfInterestConditionsClass(Base):
         nullable=False,
         server_default=sqlalchemy.text("gen_random_uuid()"))
     point_of_interest_uuid = Column(UUID(as_uuid=True),
-        ForeignKey("point_of_interest.uuid"),
-        primary_key=True,
-        nullable=False)
+                                    ForeignKey("point_of_interest.uuid"),
+                                    primary_key=True,
+                                    nullable=False)
     condition_uuid = Column(
         UUID(as_uuid=True),
         ForeignKey("condition.uuid"),
@@ -152,15 +129,8 @@ class PointOfInterestConditionsClass(Base):
         nullable=False)
 
     # association between PointOfInterestConditions -> PointOfInterest
-    point_of_interest = relationship("PointOfInterestClass", back_populates="condition_association")
+    point_of_interest = relationship(
+        "PointOfInterestClass", back_populates="condition_association")
     # association between PointOfInterestConditions -> Condition
-    condition = relationship("Condition", back_populates="point_of_interest_association")
-    
-    def __init__(self, notes, image):
-        """initialize function"""
-        #self.id = id
-        self.notes = notes
-        self.image = image
-        self.created_at = datetime.now()
-        self.updated_at = datetime.now()
-    pass
+    condition = relationship(
+        "Condition", back_populates="point_of_interest_association")

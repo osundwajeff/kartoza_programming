@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
-from models import Base, point_of_interest
+from models import Base, PointOfInterestClass
 from models import PointOfInterestConditionsClass
 from models import PointOfInterestTypeClass
 from models import Condition
@@ -29,7 +29,7 @@ with Session(engine) as session:
         image=""
         )
 
-    point_of_interest = point_of_interest(
+    point_of_interest = PointOfInterestClass(
         notes="",
         image="",
         height_m=2,
@@ -55,8 +55,8 @@ session.commit()
 def show_last_10_records(session):
 
     last_10_records = session.query(
-        point_of_interest).order_by(
-            point_of_interest.id.desc()).limit(10).all()
+        PointOfInterestClass).order_by(
+            PointOfInterestClass.id.desc()).limit(10).all()
     print("id, notes, image, height_m")
     for record in last_10_records:
         print(
@@ -66,7 +66,7 @@ def show_last_10_records(session):
 # record to update
 def update_record(session):
     record_to_update = session.query(
-        point_of_interest).filter_by(id=2).first()
+        PointOfInterestClass).filter_by(id=2).first()
     if record_to_update:
         record_to_update.notes = "Updated note"
         session.commit()
@@ -76,7 +76,7 @@ def update_record(session):
 # delete record
 def delete_record(session):
     record_to_delete = session.query(
-        point_of_interest).filter_by(id=1).first()
+        PointOfInterestClass).filter_by(id=1).first()
     if record_to_delete:
         session.delete(record_to_delete)
         session.commit()
@@ -85,7 +85,7 @@ def delete_record(session):
 
 # export as csv
 def export_to_csv(session, file_path):
-    records = session.query(point_of_interest).all()
+    records = session.query(PointOfInterestClass).all()
     with open(file_path, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(['id', 'notes', 'image', 'height_m'])
@@ -100,7 +100,7 @@ def import_from_csv(session, file_path):
     with open(file_path, 'r') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
-            new_record = point_of_interest(
+            new_record = PointOfInterestClass(
                 notes=row['notes'],
                 image=row['image'],
                 height_m=float(row['height_m'])
@@ -111,7 +111,7 @@ def import_from_csv(session, file_path):
 
 
 """Function calls: remove '#' to use"""
-# show_last_10_records(session)
+show_last_10_records(session)
 # update_record(session)
 # delete_record(session)
 # export_to_csv(session, "output.csv")

@@ -7,7 +7,7 @@ from models import Condition
 import csv
 
 
-connection_db = "postgresql://jeff:flanker99@localhost/sqlalchemy"
+connection_db = "postgresql://jeff:***@localhost/sqlalchemy"
 
 engine = create_engine(connection_db, echo=True)
 
